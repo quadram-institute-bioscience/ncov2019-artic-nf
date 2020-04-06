@@ -6,7 +6,7 @@ nextflow.preview.dsl = 2
 // import subworkflows
 include {articNcovNanopore} from './workflows/articNcovNanopore.nf' 
 include {ncovIllumina} from './workflows/illuminaNcov.nf'
-include {ncovIlluminaCram} from './workflows/illuminaNcov.nf'
+// include {ncovIlluminaCram} from './workflows/illuminaNcov.nf'
 
 
 if ( params.illumina ) {
@@ -55,7 +55,7 @@ workflow {
        }
        else {
 	   Channel.fromFilePairs( params.fastqSearchPath, flat: true)
-               .ifEmpty{ println("Couldn't match any fastq files with glob: " + ${params.fastqSearchPath} ) ; System.exit(1) }
+               .ifEmpty{ println("Couldn't match any fastq files with glob: " + "${params.fastqSearchPath}" ) ; System.exit(1) }
 	       .set{ ch_filePairs }
        }
    }
