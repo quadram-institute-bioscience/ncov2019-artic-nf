@@ -27,6 +27,26 @@ process readTrimming {
     """
 }
 
+process indexReference {
+    /**
+    * Indexes reference fasta file in the scheme repo using bwa.
+    */
+
+    tag { ref }
+
+    input:
+        path(ref)
+
+    output:
+        tuple(path('ref.fa'), path('ref.fa.amb'), path('ref.fa.ann'), path('ref.fa.bwt'), path('ref.fa.pac'), path('ref.fa.sa'))
+
+    script:
+        """
+        ln -s ${ref} ref.fa
+        bwa index ref.fa
+        """
+}
+
 process readMapping {
     /**
     * Maps trimmed paired fastq using BWA (http://bio-bwa.sourceforge.net/)
@@ -42,16 +62,14 @@ process readMapping {
     publishDir "${params.outdir}/${task.process.replaceAll(":","_")}", pattern: "${sampleName}.sorted.bam", mode: 'copy'
 
     input:
-        tuple(path(schemeRepo), sampleName, path(forward), path(reverse))
+        tuple(path(ref), path(amb), path(ann), path(bwt), path(pac), path(sa), sampleName, path(forward), path(reverse))
 
     output:
-        tuple(sampleName, path("ref.fa"), path("${sampleName}.sorted.bam"))
+        tuple(sampleName, path("${sampleName}.sorted.bam"))
 
     script:
         """
-        ln -s ${schemeRepo}/${params.schemeDir}/${params.scheme}/${params.schemeVersion}/*.reference.fasta ref.fa
-        bwa index ref.fa
-        bwa mem -t ${task.cpus} ref.fa ${forward} ${reverse} | samtools view -bS | \
+        bwa mem -t ${task.cpus} ${ref} ${forward} ${reverse} | samtools view -bS | \
         samtools sort -o ${sampleName}.sorted.bam
         """
 }
@@ -63,10 +81,10 @@ process makeIvarBedfile {
     publishDir "${params.outdir}/${task.process.replaceAll(":","_")}", pattern: "ivar.bed", mode: 'copy'
 
     input:
-    file(schemeRepo)
+    path(schemeRepo)
 
     output:
-    file("ivar.bed")
+    path "ivar.bed" , emit: bed
 
     script:
     """
@@ -100,7 +118,7 @@ process trimPrimerSequences {
     publishDir "${params.outdir}/${task.process.replaceAll(":","_")}", pattern: "${sampleName}.mapped.primertrimmed.sorted.bam", mode: 'copy'
 
     input:
-    tuple(path(bedfile), sampleName, path(ref), path(bam))
+    tuple(path(bedfile), sampleName, path(bam))
 
     output:
     tuple sampleName, path("${sampleName}.mapped.bam"), emit: mapped
@@ -156,6 +174,28 @@ process makeConsensus {
         samtools mpileup -A -d ${params.mpileupDepth} -Q0 ${bam} | \
         ivar consensus -t ${params.ivarFreqThreshold} -m ${params.ivarMinDepth} \
         -n N -p ${sampleName}.primertrimmed.consensus
+        """
+}
+
+process cramToFastq {
+    /**
+    * Converts CRAM to fastq (http://bio-bwa.sourceforge.net/)
+    * Uses samtools to convert to CRAM, to FastQ (http://www.htslib.org/doc/samtools.html)
+    * @input
+    * @output
+    */
+
+    input:
+        tuple sampleName, file(cram)
+
+    output:
+        tuple sampleName, path("${sampleName}_1.fastq.gz"), path("${sampleName}_2.fastq.gz")
+
+    script:
+        """
+        samtools collate -u ${cram} -o tmp.bam
+        samtools fastq -1 ${sampleName}_1.fastq.gz -2 ${sampleName}_2.fastq.gz tmp.bam
+        rm tmp.bam
         """
 }
 

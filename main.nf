@@ -6,11 +6,16 @@ nextflow.preview.dsl = 2
 // import subworkflows
 include {articNcovNanopore} from './workflows/articNcovNanopore.nf' 
 include {ncovIllumina} from './workflows/illuminaNcov.nf'
+include {ncovIlluminaCram} from './workflows/illuminaNcov.nf'
 
 
 if ( params.illumina ) {
-   if (! params.directory ) {
-       println("Please supply a directory containing fastqs with --directory")
+   if ( !params.directory ) {
+       println("Please supply a directory containing fastqs or CRAMs with --directory. Specify --cram if supplying a CRAMs directory")
+       System.exit(1)
+   }
+   if ( (params.ivarBed && ! params.alignerRefPrefix) || (!params.ivarBed && params.alignerRefPrefix) ) {
+       println("ivarBed and alignerRefPrefix must be supplied together")
        System.exit(1)
    }
 } else if ( params.medaka || params.nanopolish ) {
@@ -22,6 +27,10 @@ if ( params.illumina ) {
    }
    if (! params.sequencing_summary ) {
        println("Please supply the path to the sequencing_summary.txt file from your run with --sequencing_summary")
+       System.exit(1)
+   }
+   if ( params.ivarBed || params.alignerRefPrefix ) {
+       println("ivarBed and alignerRefPrefix only work in illumina mode")
        System.exit(1)
    }
 } else {
@@ -38,8 +47,17 @@ if ( ! params.prefix ) {
 // main workflow
 workflow {
    if ( params.illumina ) {
-       Channel.fromFilePairs( params.fastqSearchPath, flat: true)
-              .set{ ch_filePairs }
+       if (params.cram) {
+           Channel.fromPath( "${params.directory}/**.cram" )
+              .map { file -> tuple(file.baseName, file) }
+              .ifEmpty{ println("Couldn't match any cram files") ; System.exit(1)}
+              .set{ ch_cramFiles }
+       }
+       else {
+	   Channel.fromFilePairs( params.fastqSearchPath, flat: true)
+               .ifEmpty{ println("Couldn't match any fastq files with glob: " + ${params.fastqSearchPath} ) ; System.exit(1) }
+	       .set{ ch_filePairs }
+       }
    }
    else {
        Channel.fromPath( "${params.basecalled_fastq}" )
@@ -72,8 +90,13 @@ workflow {
      if ( params.nanopolish || params.medaka ) {
          articNcovNanopore(ch_fastqDirs, ch_fast5Pass, ch_seqSummary)
      } else if ( params.illumina ) {
-         ncovIllumina(ch_filePairs)
-    } else {
+         if ( params.cram ) {
+            ncovIlluminaCram(ch_cramFiles)
+         }
+         else {
+            ncovIllumina(ch_filePairs)
+         }
+     } else {
          println("Please select a workflow with --nanopolish, --illumina or --medaka")
      }
      

@@ -27,12 +27,21 @@ workflow sequenceAnalysis {
 
     main:
       articDownloadScheme()
+      
+      //V3 on artic github is still incorrect format, so need to fix it 
+      if (params.fixBed) {
+        makeIvarBedfile(articDownloadScheme.out.scheme)
+        makeIvarBedfile.out.bed.set {ch_bed}
+      } else {
+        articDownloadScheme.out.bed.set {ch_bed}
+      }
+      
 
       readTrimming(ch_filePairs)
 
       readMapping(articDownloadScheme.out.scheme.combine(readTrimming.out))
 
-      trimPrimerSequences(articDownloadScheme.out.bed.combine(readMapping.out))
+      trimPrimerSequences(ch_bed.combine(readMapping.out))
 
       callVariants(trimPrimerSequences.out.ptrim.combine(articDownloadScheme.out.reffasta))
 
