@@ -5,6 +5,31 @@ WARNING - THIS REPO IS UNDER ACTIVE DEVELOPMENT AND ITS BEHAVIOUR MAY CHANGE AT 
 
 PLEASE ENSURE THAT YOU READ BOTH THE README AND THE CONFIG FILE AND UNDERSTAND THE EFFECT OF THE OPTIONS ON YOUR DATA! 
 
+#### QIB settings
+
+For using the pipeline with QIB setting, i.e. primers V3 and cluster configuration, please use **qib** branch
+
+```bash
+git checkout qib
+```
+Command line to execute the pipeline for a run
+
+```bash
+nextflow run main.nf \
+--directory "/beegfs/sars-cov2/Test_060420/merge" \
+--illumina \
+--prefix "test-v3" \
+--outdir "result.test" \
+-profile slurm,singularity \
+--schemeVersion "V3" \
+--fixBed \
+--tracedir "pipeline_info" \
+-with-trace \
+-with-report \
+-with-timeline \
+-with-dag
+```
+
 
 #### Introduction
 
