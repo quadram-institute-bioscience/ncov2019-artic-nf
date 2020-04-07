@@ -29,16 +29,6 @@ workflow sequenceAnalysis {
       ch_filePairs
 
     main:
-      articDownloadScheme()
-      
-      //V3 on artic github is still incorrect format, so need to fix it 
-      if (params.fixBed) {
-        makeIvarBedfile(articDownloadScheme.out.scheme)
-        makeIvarBedfile.out.bed.set {ch_bed}
-      } else {
-        articDownloadScheme.out.bed.set {ch_bed}
-      }
-      
 
       readTrimming(ch_filePairs)
 
@@ -47,6 +37,15 @@ workflow sequenceAnalysis {
         ref = Channel.fromPath(params.alignerRefPrefix)
       } else if (params.schemeRepoURL =~ /^http/) {
         articDownloadScheme()
+        
+        //V3 on artic github is still incorrect format, so need to fix it 
+        if (params.fixBed) {
+          makeIvarBedfile(articDownloadScheme.out.scheme)
+          makeIvarBedfile.out.bed.set {ch_bed}
+        } else {
+          articDownloadScheme.out.bed.set {ch_bed}
+        }
+
         ref = articDownloadScheme.out.reffasta
       } else {
         ref = Channel.fromPath("${params.schemeRepoURL}/**/${params.schemeVersion}/*.reference.fasta")
@@ -67,7 +66,7 @@ workflow sequenceAnalysis {
         readMapping(indexReference.out.combine(readTrimming.out))
 
         if (params.schemeRepoURL =~ /^http/) {
-          trimPrimerSequences(articDownloadScheme.out.bed.combine(readMapping.out))
+          trimPrimerSequences(ch_bed.combine(readMapping.out))
         } else {
           localBed = Channel.fromPath("${params.schemeRepoURL}/**/${params.schemeVersion}/${params.scheme}.bed")
           trimPrimerSequences(localBed.combine(readMapping.out))
