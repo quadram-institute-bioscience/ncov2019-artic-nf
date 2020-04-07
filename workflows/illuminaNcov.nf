@@ -12,7 +12,7 @@ include {trimPrimerSequences} from '../modules/illumina.nf'
 include {callVariants} from '../modules/illumina.nf'
 include {makeConsensus} from '../modules/illumina.nf' 
 include {cramToFastq} from '../modules/illumina.nf'
-
+include {fastqMergeLanes} from '../modules/illumina.nf'
 
 include {makeQCCSV} from '../modules/qc.nf'
 include {writeQCSummaryCSV} from '../modules/qc.nf'
@@ -22,6 +22,24 @@ include {collateSamples} from '../modules/upload.nf'
 // import subworkflows
 include {CLIMBrsync} from './upload.nf'
 
+
+workflow fastqMergeFourLanes {
+  take:
+    ch_filePairs
+  
+  main:
+    // Group 4 lane elements into 1 element in the channel
+    ch_filePairs
+            .map {
+            it -> [it[0].replaceAll(~/\_L00[1,2,3,4]/,""), it[1], it[2]]
+            }
+            .groupTuple(by:0)
+            .set { ch_reads_four_lanes }
+
+    fastqMergeLanes(ch_reads_four_lanes)
+  
+  emit: fastqMergeLanes.out
+}
 
 workflow prepareReferenceFiles {
     // Get reference fasta
@@ -125,9 +143,14 @@ workflow ncovIllumina {
     main:
       // Build or download fasta, index and bedfile as required
       prepareReferenceFiles()
-      
+      //If fastqs are separated in four lane files, need to merge first
+      if (params.fourLanes) {
+        fastqMergeFourLanes(ch_filePairs).out.set { ch_filePairs_new }
+      } else {
+        ch_filePairs.set { ch_filePairs_new }
+      }
       // Actually do analysis
-      sequenceAnalysis(ch_filePairs, prepareReferenceFiles.out.bwaindex, prepareReferenceFiles.out.bedfile)
+      sequenceAnalysis(ch_filePairs_new, prepareReferenceFiles.out.bwaindex, prepareReferenceFiles.out.bedfile)
  
       // Upload files to CLIMB
       if ( params.upload ) {

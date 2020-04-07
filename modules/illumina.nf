@@ -1,3 +1,22 @@
+process fastqMergeLanes {
+  publishDir "${params.outdir}/${task.process.replaceAll(":","_")}", mode: 'copy'
+
+  tag { sampleName }
+
+  input:
+  tuple sampleName, file(forward), file(reverse) from ch_reads_in
+  
+  output:
+  tuple sampleName, file("${sampleName}_R1.fastq.gz"), file("${sampleName}_R2.fastq.gz") into ch_reads_out
+  
+  script:
+  """
+  zcat $forward | gzip > ${sampleName}_R1.fastq.gz
+  zcat $reverse | gzip > ${sampleName}_R2.fastq.gz
+  """
+}
+
+
 process readTrimming {
     /**
     * Trims paired fastq using trim_galore (https://github.com/FelixKrueger/TrimGalore)
