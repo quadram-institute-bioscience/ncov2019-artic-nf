@@ -54,12 +54,7 @@ workflow {
        }
        else {
 	   Channel.fromFilePairs( params.fastqSearchPath, flat: true)
-<<<<<<< HEAD
-               .ifEmpty{ println("Couldn't match any fastq files with glob: " + "${params.fastqSearchPath}" ) ; System.exit(1) }
-	       .set{ ch_filePairs }
-=======
 	          .set{ ch_filePairs }
->>>>>>> nextseq
        }
    }
    else {
