@@ -145,7 +145,8 @@ workflow ncovIllumina {
       prepareReferenceFiles()
       //If fastqs are separated in four lane files, need to merge first
       if (params.fourLanes) {
-        fastqMergeFourLanes(ch_filePairs).out.set { ch_filePairs_new }
+        fastqMergeFourLanes(ch_filePairs)
+        fastqMergeFourLanes.out.set { ch_filePairs_new }
       } else {
         ch_filePairs.set { ch_filePairs_new }
       }
