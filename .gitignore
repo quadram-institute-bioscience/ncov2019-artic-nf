@@ -3,3 +3,6 @@ nextflow
 results
 *.sif
 work
+result*
+report*
+trace*
