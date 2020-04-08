@@ -16,18 +16,17 @@ Command line to execute the pipeline for a run
 
 ```bash
 nextflow run main.nf \
---directory "/beegfs/sars-cov2/Test_060420/merge" \
+--directory "/beegfs/sars-cov2/Test_060420" \
 --illumina \
 --prefix "test-v3" \
 --outdir "result.test" \
+--bed "/beegfs/software/ncov2019-artic-nf/primers/scheme/primer_schemes/nCoV-2019/V3/nCoV-2019.bed" \
+--ref "/beegfs/software/ncov2019-artic-nf/primers/scheme/primer_schemes/nCoV-2019/V3/nCoV-2019.reference.fasta" \
+--fourLanes \
 -profile slurm,singularity \
---schemeVersion "V3" \
---fixBed \
---tracedir "pipeline_info" \
--with-trace \
--with-report \
--with-timeline \
--with-dag
+-with-trace trace-4lanes.txt \
+-with-report report-4lanes.html \
+-resume
 ```
 
 
