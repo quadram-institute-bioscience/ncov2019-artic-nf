@@ -69,7 +69,7 @@ workflow {
 
  
        // Check to see if we have barcodes
-       def nanoporeBarcodeDirs = new FileNameByRegexFinder().getFileNames(params.basecalled_fastq, /.*barcode\d\d$/)
+       def nanoporeBarcodeDirs = new FileNameByRegexFinder().getFileNames(params.basecalled_fastq, /.*barcode[0-9]{2,4}$/)
        
        if( nanoporeBarcodeDirs ) {
             // Yes, barcodes!
