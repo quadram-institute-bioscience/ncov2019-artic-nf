@@ -71,11 +71,10 @@ workflow {
        // Check to see if we have barcodes
        def nanoporeBarcodeDirs = new FileNameByRegexFinder().getFileNames(params.basecalled_fastq, /.*barcode\d\d$/)
        
-       
        if( nanoporeBarcodeDirs ) {
             // Yes, barcodes!
             Channel.fromPath( "${params.basecalled_fastq}/barcode*", type: 'dir', maxDepth: 1 )
-                   .filter{ it.listFiles().size() > 5 }
+                   .filter{ it.listFiles().size() >= params.minFastqFiles }
                    .set{ ch_fastqDirs }
        } else {
             // No, no barcodes
