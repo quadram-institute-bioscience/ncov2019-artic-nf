@@ -76,13 +76,16 @@ workflow {
        def nanoporeBarcodeDirs = new FileNameByRegexFinder().getFileNames(params.basecalled_fastq, /.*barcode[0-9]{2,4}$/)
        
        if( nanoporeBarcodeDirs ) {
-            // Yes, barcodes!
+            // Yes, barcodes by guppy!
             Channel.fromPath( "${params.basecalled_fastq}/barcode*", type: 'dir', maxDepth: 1 )
                    .filter{ it.listFiles().size() >= params.minFastqFiles }
                    .set{ ch_fastqDirs }
        } else {
             // No, no barcodes
-            Channel.fromPath( "${params.basecalled_fastq}", type: 'dir', maxDepth: 1 )
+            // Channel.fromPath( "${params.basecalled_fastq}", type: 'dir', maxDepth: 1 )
+            //         .set{ ch_fastqDirs }
+            // Indivirual file as barcode
+            Channel.fromPath( "${params.basecalled_fastq}/*.{fastq.gz,fastq}", maxDepth: 1 )
                     .set{ ch_fastqDirs }
       }
    }

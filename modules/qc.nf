@@ -39,3 +39,35 @@ process writeQCSummaryCSV {
     }
 }
 
+process remove_human_dna {
+    publishDir "${params.outdir}/cleanedFastq", mode: 'copy'
+    
+    tag "$sample_name"
+    
+    label 'largemem'
+    
+    input:
+    file(params.kraken2_human_db)
+    tuple sample_name, file(reads)
+
+    output:
+    if (params.se) {
+        tuple sample_name, path("*.fastq")    
+    } else {
+        tuple sample_name, path("*_1.fastq"), path("*_2.fastq")
+    }
+    file("*.tsv")
+    
+    script:
+    def kraken_input = params.se ? "--unclassified-out ${sample_name}.fastq --classified-out ${sample_name}_human.fastq" : "--paired-end --unclassified-out ${sample_name}_#.fastq --classified-out {}_human_#.fastq"
+    """
+    kraken2 \
+    --threads $task.cpus \
+    --db ${params.kraken2_human_db} \
+    --gzip-compress \
+    ${kraken_input} \
+    --output read_reports_${sample_name}.tsv \
+    --memory-mapping \
+    $reads
+    """ 
+}

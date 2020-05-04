@@ -73,6 +73,7 @@ process readMapping {
     * @input 
     * @output 
     */
+    errorStrategy 'ignore'
 
     tag { sampleName }
 

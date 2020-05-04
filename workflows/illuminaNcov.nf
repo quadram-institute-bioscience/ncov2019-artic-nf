@@ -104,9 +104,15 @@ workflow sequenceAnalysis {
       ch_bedFile
 
     main:
-      readTrimming(ch_filePairs)
+      if (params.readTrimming) {
+        readTrimming(ch_filePairs)
+        readTrimming.out.set{ ch_preprocess }
+      } else {
+        ch_filePairs.set {ch_preprocess }
+      }
+      
 
-      readMapping(readTrimming.out.combine(ch_preparedRef))
+      readMapping(ch_preprocess.combine(ch_preparedRef))
 
       trimPrimerSequences(readMapping.out.combine(ch_bedFile))
  
@@ -130,7 +136,7 @@ workflow sequenceAnalysis {
 
       collateSamples(qc.pass.map{ it[0] }
                            .join(makeConsensus.out, by: 0)
-                           .join(trimPrimerSequences.out.mapped))     
+                           .join(trimPrimerSequences.out.mapped))
 
     emit:
       qc_pass = collateSamples.out

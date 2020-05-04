@@ -52,7 +52,7 @@ def read_depth_file(bamfile):
 
 def get_covered_pos(pos_depth, min_depth):
     counter = 0
-    for contig, pos,depth in pos_depth:
+    for contig, pos, depth in pos_depth:
         if int(depth) >= min_depth:
             counter = counter + 1
     
@@ -127,7 +127,7 @@ def go(args):
         largest_N_gap = get_largest_N_gap(fasta)
 
     	# QC PASS / FAIL
-        if largest_N_gap >= 10000 or pct_covered_bases >= 85.0:
+        if largest_N_gap >= 10000 or pct_covered_bases >= 50.0:
             if pct_N_bases < 50.0:
                 qc_pass = "TRUE"
 

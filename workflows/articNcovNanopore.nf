@@ -72,10 +72,16 @@ workflow sequenceAnalysisMedaka {
     main:
       articDownloadScheme()
 
-      articGuppyPlex(ch_runFastqDirs.flatten())
+      // articGuppyPlex(ch_runFastqDirs.flatten())
+      if (params.useGuppyPlex) {
+          articGuppyPlex(ch_runFastqDirs)
+          articGuppyPlex.out.fastq.set {ch_artic_in}
+      } else {
+        ch_runFastqDirs.set {ch_artic_in}
+      }
+      
 
-      articMinIONMedaka(articGuppyPlex.out.fastq
-                                      .combine(articDownloadScheme.out.scheme))
+      articMinIONMedaka(ch_artic_in.combine(articDownloadScheme.out.scheme))
 
       articRemoveUnmappedReads(articMinIONMedaka.out.mapped)
 
