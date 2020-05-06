@@ -14,22 +14,40 @@ git checkout qib
 ```
 Command line to execute the pipeline for a run
 
+#### Illumina data
+
 ```bash
-nextflow run main.nf \
+nextflow run /path/to/ncov2019-artic-nf/folder \
 --directory "/beegfs/sars-cov2/Test_060420" \
 --illumina \
+--readTrimming \
 --prefix "test-v3" \
 --outdir "result.test" \
 --bed "/beegfs/software/ncov2019-artic-nf/primers/scheme/primer_schemes/nCoV-2019/V3/nCoV-2019.bed" \
 --ref "/beegfs/software/ncov2019-artic-nf/primers/scheme/primer_schemes/nCoV-2019/V3/nCoV-2019.reference.fasta" \
---fourLanes \
--profile slurm,singularity \
+--fourLanes \ #Use when 4-lane fastqs were not merged
+-profile qib,singularity \
 -with-trace trace-4lanes.txt \
 -with-report report-4lanes.html \
 -resume
 ```
 
+#### Nanopore data (ARTIC pipeline)
 
+```
+nextflow run /path/to/ncov2019-artic-nf/folder
+--outdir "/path/to/output" \
+--prefix "NORW-20200418" \
+--useGuppyPlex \
+--min_length 100 \
+--max_length 550 \
+--normalise 500 \
+-profile qib,singularity \
+--basecalled_fastq "/path/to/basedcall_folder/" \ 
+
+```
+
+# Original Readme
 #### Introduction
 
 ------------
