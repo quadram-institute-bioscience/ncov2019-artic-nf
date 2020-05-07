@@ -28,8 +28,7 @@ nextflow run /path/to/ncov2019-artic-nf/folder \
 --fourLanes \ #Use when 4-lane fastqs were not merged
 -profile qib,singularity \
 -with-trace trace-4lanes.txt \
--with-report report-4lanes.html \
--resume
+-with-report report-4lanes.html
 ```
 
 #### Nanopore data (ARTIC pipeline)
@@ -44,7 +43,9 @@ nextflow run /path/to/ncov2019-artic-nf/folder
 --normalise 500 \
 -profile qib,singularity \
 --medaka \
---basecalled_fastq "/path/to/basedcall_folder/" 
+--basecalled_fastq "/path/to/basedcall_folder/"
+-with-trace trace.txt \
+-with-report report.html
 ```
 
 # Original Readme
