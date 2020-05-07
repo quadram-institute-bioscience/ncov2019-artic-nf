@@ -18,11 +18,11 @@ Command line to execute the pipeline for a run
 
 ```bash
 nextflow run /path/to/ncov2019-artic-nf/folder \
---directory "/beegfs/sars-cov2/Test_060420" \
+--directory "/path/to/illumina/fastq/folder" \
 --illumina \
 --readTrimming \
 --prefix "test-v3" \
---outdir "result.test" \
+--outdir "/path/to/output/folder" \
 --bed "/beegfs/software/ncov2019-artic-nf/primers/scheme/primer_schemes/nCoV-2019/V3/nCoV-2019.bed" \
 --ref "/beegfs/software/ncov2019-artic-nf/primers/scheme/primer_schemes/nCoV-2019/V3/nCoV-2019.reference.fasta" \
 --fourLanes \ #Use when 4-lane fastqs were not merged
@@ -43,8 +43,8 @@ nextflow run /path/to/ncov2019-artic-nf/folder
 --max_length 550 \
 --normalise 500 \
 -profile qib,singularity \
---basecalled_fastq "/path/to/basedcall_folder/" \ 
-
+--medaka \
+--basecalled_fastq "/path/to/basedcall_folder/" 
 ```
 
 # Original Readme
