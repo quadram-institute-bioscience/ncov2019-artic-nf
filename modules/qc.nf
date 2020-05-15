@@ -1,6 +1,8 @@
 process makeQCCSV {
     tag { sampleName }
-
+    
+    label 'largecpu'
+    
     publishDir "${params.outdir}/qc_plots", pattern: "${sampleName}.depth.png", mode: 'copy'
     
     errorStrategy 'ignore'

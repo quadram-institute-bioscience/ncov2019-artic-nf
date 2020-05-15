@@ -134,7 +134,19 @@ workflow sequenceAnalysis {
 
       writeQCSummaryCSV(qc.header.concat(qc.pass).concat(qc.fail).toList())
 
-      collateSamples(qc.pass.map{ it[0] }
+      if (params.get_all) {
+          makeQCCSV.out.csv.splitCsv()
+                           .unique()
+                           .set {collate_ch}
+      } else {
+        qc.pass.set {collate_ch}
+      }
+      // Pass
+      // makeQCCSV.out.csv.splitCsv()
+      //                  .unique().subscribe{ println "$it" } 
+      collate_ch.subscribe{ println "$it" }
+
+      collateSamples(collate_ch.map{ it[0] }
                            .join(makeConsensus.out, by: 0)
                            .join(trimPrimerSequences.out.mapped))
 

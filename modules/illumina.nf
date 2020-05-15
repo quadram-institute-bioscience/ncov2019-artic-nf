@@ -125,7 +125,7 @@ process trimPrimerSequences {
 process callVariants {
 
     tag { sampleName }
-
+    errorStrategy 'ignore'
     publishDir "${params.outdir}/${task.process.replaceAll(":","_")}", pattern: "${sampleName}.variants.tsv", mode: 'copy'
 
     input:
