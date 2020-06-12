@@ -144,7 +144,7 @@ workflow sequenceAnalysis {
       // Pass
       // makeQCCSV.out.csv.splitCsv()
       //                  .unique().subscribe{ println "$it" } 
-      collate_ch.subscribe{ println "$it" }
+      // collate_ch.subscribe{ println "$it" }
 
       collateSamples(collate_ch.map{ it[0] }
                            .join(makeConsensus.out, by: 0)

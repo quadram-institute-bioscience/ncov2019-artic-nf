@@ -6,3 +6,6 @@ work
 result*
 report*
 trace*
+*.fa
+.vscode/
+.ipynb_checkpoints/

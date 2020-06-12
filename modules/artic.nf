@@ -44,6 +44,8 @@ process articGuppyPlex {
 process articMinIONMedaka {
     tag { sampleName }
 
+    errorStrategy 'ignore'
+
     label 'largecpu'
 
     publishDir "${params.outdir}/${task.process.replaceAll(":","_")}", pattern: "${sampleName}.*", mode: "copy"

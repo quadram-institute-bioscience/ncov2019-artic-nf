@@ -97,9 +97,17 @@ workflow sequenceAnalysisMedaka {
                        }
                        .set { qc }
 
+      if (params.get_all) {
+          makeQCCSV.out.csv.splitCsv()
+                           .unique()
+                           .set {collate_ch}
+      } else {
+        qc.pass.set {collate_ch}
+      }
+
      writeQCSummaryCSV(qc.header.concat(qc.pass).concat(qc.fail).toList())
 
-     collateSamples(qc.pass.map{ it[0] }
+     collateSamples(collate_ch.map{ it[0] }
                            .join(articMinIONMedaka.out.consensus_fasta, by: 0)
                            .join(articRemoveUnmappedReads.out))
 
