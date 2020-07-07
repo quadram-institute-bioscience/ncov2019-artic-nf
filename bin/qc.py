@@ -5,6 +5,8 @@ import csv
 import subprocess
 import pandas as pd
 import matplotlib.pyplot as plt
+import pysam
+from collections import Counter
 
 """
 This script can incorporate as many QC checks as required
@@ -49,6 +51,19 @@ def read_depth_file(bamfile):
     
     return pos_depth
 
+
+def count_full_mapped_reads(bam_file, read_length = 148):
+    bam = pysam.AlignmentFile(bam_file, "rb")
+    full_reads = []
+    for read in bam:
+        if len(read.cigar) == 1:
+            if (read.cigar[0][0] == 0 and read.cigar[0][1] >= read_length):
+                full_reads.append(read.cigar[0][1])
+    count_ = dict(Counter(full_reads))
+    sum_mapped_reads = sum(count_.values())
+    
+    return sum_mapped_reads
+    
 
 def get_covered_pos(pos_depth, min_depth):
     counter = 0
@@ -108,6 +123,7 @@ def go(args):
     ## Depth calcs
     ref_length = get_ref_length(args.ref)
     depth_pos = read_depth_file(args.bam)
+    full_mapped_reads = count_full_mapped_reads(args.bam)
 
     depth_covered_bases = get_covered_pos(depth_pos, depth)
 
@@ -120,6 +136,7 @@ def go(args):
     pct_N_bases   = 0
     largest_N_gap = 0
     qc_pass       = "FALSE"
+    false_positive = "FALSE"
 
     if len(fasta.seq) != 0:
 
@@ -131,14 +148,20 @@ def go(args):
             if pct_N_bases < 50.0:
                 qc_pass = "TRUE"
 
+        # Flag FP
+        if pct_N_bases > 95.0 and full_mapped_reads <= 100:
+            false_positive = "TRUE"
 
     qc_line = { 'sample_name' : args.sample,
                 'pct_N_bases' : "{:.2f}".format(pct_N_bases),
-          'pct_covered_bases' : "{:.2f}".format(pct_covered_bases), 
-           'longest_no_N_run' : largest_N_gap,
-                       'fasta': args.fasta, 
-                        'bam' : args.bam,
-                    'qc_pass' : qc_pass}
+                'pct_covered_bases' : "{:.2f}".format(pct_covered_bases), 
+                'longest_no_N_run' : largest_N_gap,
+                'fasta': args.fasta, 
+                'bam' : args.bam,
+                'qc_pass' : qc_pass,
+                'full_mapped_reads' : full_mapped_reads,
+                'false_positive': false_positive
+                }
 
 
     with open(args.outfile, 'w') as csvfile:

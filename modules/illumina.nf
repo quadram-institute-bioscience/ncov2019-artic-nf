@@ -73,7 +73,7 @@ process readMapping {
     * @input 
     * @output 
     */
-    errorStrategy 'ignore'
+    errorStrategy { task.exitStatus in [143, 255] ? 'retry' : 'ignore' }
 
     tag { sampleName }
 
@@ -125,7 +125,9 @@ process trimPrimerSequences {
 process callVariants {
 
     tag { sampleName }
-    errorStrategy 'ignore'
+    
+    errorStrategy { task.exitStatus in [143, 255] ? 'retry' : 'ignore' }
+
     publishDir "${params.outdir}/${task.process.replaceAll(":","_")}", pattern: "${sampleName}.variants.tsv", mode: 'copy'
 
     input:
