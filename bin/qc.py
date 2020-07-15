@@ -115,6 +115,7 @@ def sliding_window_N_density(sequence, window=10):
 
 
 def go(args):
+    depth = 0
     if args.illumina:
         depth = 10
     elif args.nanopore:
@@ -136,7 +137,7 @@ def go(args):
     pct_N_bases   = 0
     largest_N_gap = 0
     qc_pass       = "FALSE"
-    false_positive = "FALSE"
+    probable_false_positive = "FALSE"
 
     if len(fasta.seq) != 0:
 
@@ -149,18 +150,18 @@ def go(args):
                 qc_pass = "TRUE"
 
         # Flag FP
-        if pct_N_bases > 95.0 and full_mapped_reads <= 100:
-            false_positive = "TRUE"
+        if pct_N_bases >= 98.0 and full_mapped_reads <= 100:
+            probable_false_positive = "TRUE"
 
     qc_line = { 'sample_name' : args.sample,
                 'pct_N_bases' : "{:.2f}".format(pct_N_bases),
                 'pct_covered_bases' : "{:.2f}".format(pct_covered_bases), 
                 'longest_no_N_run' : largest_N_gap,
-                'fasta': args.fasta, 
-                'bam' : args.bam,
-                'qc_pass' : qc_pass,
+                'fasta': args.fasta,
                 'full_mapped_reads' : full_mapped_reads,
-                'false_positive': false_positive
+                'probable_false_positive': probable_false_positive ,
+                'bam' : args.bam,
+                'qc_pass' : qc_pass
                 }
 
 

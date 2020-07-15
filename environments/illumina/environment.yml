@@ -5,6 +5,7 @@ channels:
   - defaults
 dependencies:
   - python=3
+  - matplotlib-base
   - biopython=1.74
   - pandas=0.23.0=py36_1
   - bwa=0.7.17=pl5.22.0_2
