@@ -9,6 +9,7 @@ include {articGuppyPlex} from '../modules/artic.nf'
 include {articMinIONNanopolish} from  '../modules/artic.nf' 
 include {articMinIONMedaka} from  '../modules/artic.nf'
 include {articRemoveUnmappedReads} from '../modules/artic.nf' 
+include {barcodeToCOG} from '../modules/artic.nf'
 
 include {makeQCCSV} from '../modules/qc.nf'
 include {writeQCSummaryCSV} from '../modules/qc.nf'
@@ -75,7 +76,14 @@ workflow sequenceAnalysisMedaka {
       // articGuppyPlex(ch_runFastqDirs.flatten())
       if (params.useGuppyPlex) {
           articGuppyPlex(ch_runFastqDirs)
-          articGuppyPlex.out.fastq.set {ch_artic_in}
+          //Rename barcode name to COG name if a lookup table given.
+          if (params.barcode_lookup) {
+            barcodeToCOG(articGuppyPlex.out.fastq)
+            barcodeToCOG.out.fastq.set {ch_artic_in}
+          } else {
+            articGuppyPlex.out.fastq.set {ch_artic_in}
+          }
+          
       } else {
         ch_runFastqDirs.set {ch_artic_in}
       }

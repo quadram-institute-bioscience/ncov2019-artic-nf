@@ -41,6 +41,25 @@ process articGuppyPlex {
     """
 }
 
+process barcodeToCOG {
+    tag { fastq.baseName }
+
+    errorStrategy 'ignore'
+
+    input:
+    path fastq
+    
+    output:
+    path "*.fastq", emit: fastq
+    
+    script:
+   
+    """
+    rename.py ${params.barcode_lookup} ${fastq}
+    """
+}
+
+
 process articMinIONMedaka {
     tag { sampleName }
 
