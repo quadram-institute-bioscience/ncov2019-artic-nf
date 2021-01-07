@@ -23,13 +23,13 @@ process articGuppyPlex {
 
     label 'largemem'
 
-    publishDir "${params.outdir}/${task.process.replaceAll(":","_")}", pattern: "${params.prefix}*.fastq", mode: "copy"
+    publishDir "${params.outdir}/${task.process.replaceAll(":","_")}", pattern: "${params.prefix}*.fastq*", mode: "copy"
 
     input:
     path(fastqDir)
 
     output:
-    path "${params.prefix}*.fastq", emit: fastq
+    path "${params.prefix}*.fastq*", emit: fastq
 
     script:
     """
@@ -55,6 +55,7 @@ process barcodeToCOG {
     script:
    
     """
+    hostname > hostname
     rename.py ${params.barcode_lookup} ${fastq}
     """
 }
@@ -62,12 +63,15 @@ process barcodeToCOG {
 
 process articMinIONMedaka {
     tag { sampleName }
-
+    
+    validExitStatus 0,20
+    
     errorStrategy 'ignore'
 
     label 'largecpu'
 
-    publishDir "${params.outdir}/${task.process.replaceAll(":","_")}", pattern: "${sampleName}.*", mode: "copy"
+    publishDir "${params.outdir}/${task.process.replaceAll(":","_")}", pattern: "${sampleName}.*", mode: "copy", 
+    saveAs: {filename -> "${sampleName}/${filename}"}
 
     input:
     tuple file(fastq), file(schemeRepo)
@@ -82,7 +86,7 @@ process articMinIONMedaka {
     script:
     // Make an identifier from the fastq filename
     sampleName = fastq.getBaseName().replaceAll(~/\.fastq.*$/, '')
-
+    coronahit = params.coronahit ? "--coronahit" : ""
     // Configure artic minion pipeline
     minionRunConfigBuilder = []
 
@@ -100,6 +104,7 @@ process articMinIONMedaka {
 
     """
     artic minion --medaka \
+    ${coronahit} \
     ${minionFinalConfig} \
     --threads ${task.cpus} \
     --scheme-directory ${schemeRepo}/${params.schemeDir} \
@@ -108,13 +113,15 @@ process articMinIONMedaka {
     ${sampleName}
     """
 }
+// samtools bam2fq ${sampleName}.sorted.bam | seqkit fq2fa | seqkit fx2tab -l -n > ${sampleName}.tab
 
 process articMinIONNanopolish {
     tag { sampleName }
-
+    errorStrategy 'ignore'
     label 'largecpu'
 
-    publishDir "${params.outdir}/${task.process.replaceAll(":","_")}", pattern: "${sampleName}.*", mode: "copy"
+    publishDir "${params.outdir}/${task.process.replaceAll(":","_")}", pattern: "${sampleName}.*", mode: "copy",
+    saveAs: {filename -> "${sampleName}/${filename}"}
 
     input:
     tuple file(fastq), file(schemeRepo), file(fast5Pass), file(seqSummary)
@@ -129,7 +136,7 @@ process articMinIONNanopolish {
     script:
     // Make an identifier from the fastq filename
     sampleName = fastq.getBaseName().replaceAll(~/\.fastq.*$/, '')
-
+    coronahit = params.coronahit ? "--coronahit" : ""
     // Configure artic minion pipeline
     minionRunConfigBuilder = []
 
@@ -147,6 +154,7 @@ process articMinIONNanopolish {
 
     """
     artic minion ${minionFinalConfig} \
+    ${coronahit} \
     --threads ${task.cpus} \
     --scheme-directory ${schemeRepo}/${params.schemeDir} \
     --read-file ${fastq} \

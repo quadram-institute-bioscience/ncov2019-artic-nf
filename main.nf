@@ -103,6 +103,30 @@ workflow {
      } else {
          println("Please select a workflow with --nanopolish, --illumina or --medaka")
      }
-     
+
 }
 
+workflow.onComplete {
+    //Send negative control plots to discord for illumina
+    if (workflow.success) {
+        println "Pipeline completed at: $workflow.complete"
+        
+        if (params.illumina) {
+            send_discord = ["/home/ubuntu/miniconda3/envs/monitor/bin/python",
+                        baseDir + "/bin/send_discord.py",
+                        "report",
+                        params.outdir + "/qc_plots"]
+            send_discord.execute().waitFor()
+
+            send_qc_report = ["/home/ubuntu/miniconda3/envs/monitor/bin/python",
+                    baseDir + "/bin/send_discord.py",
+                    "send-qc-report",
+                    params.outdir + "/" + params.prefix + ".qc.csv"]
+            send_qc_report.execute().waitFor()
+        }
+        
+    } else {
+        println "Pipeline completed at: $workflow.complete"
+    }
+    
+}

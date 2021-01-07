@@ -9,3 +9,5 @@ trace*
 *.fa
 .vscode/
 .ipynb_checkpoints/
+misc
+others
