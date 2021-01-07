@@ -33,10 +33,17 @@ workflow sequenceAnalysisNanopolish {
       
       articGuppyPlex(ch_runFastqDirs.flatten())
 
-      articMinIONNanopolish(articGuppyPlex.out.fastq
-                                          .combine(articDownloadScheme.out.scheme)
-                                          .combine(ch_fast5Pass)
-                                          .combine(ch_seqSummary))
+                //Rename barcode name to COG name if a lookup table given.
+      if (params.barcode_lookup) {
+        barcodeToCOG(articGuppyPlex.out.fastq)
+        barcodeToCOG.out.fastq.set {ch_artic_in}
+      } else {
+        articGuppyPlex.out.fastq.set {ch_artic_in}
+      }
+
+      articMinIONNanopolish(ch_artic_in.combine(articDownloadScheme.out.scheme)
+                                       .combine(ch_fast5Pass)
+                                       .combine(ch_seqSummary))
 
       articRemoveUnmappedReads(articMinIONNanopolish.out.mapped)
 

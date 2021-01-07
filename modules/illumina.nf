@@ -73,8 +73,6 @@ process readMapping {
     * @input 
     * @output 
     */
-    errorStrategy { task.exitStatus in [143, 255] ? 'retry' : 'ignore' }
-
     tag { sampleName }
 
     label 'largecpu'
@@ -89,7 +87,7 @@ process readMapping {
 
     script:
         """
-        bwa mem -t ${task.cpus} ${ref} ${forward} ${reverse} | samtools view -bS | \
+        bwa mem -t ${task.cpus} ${ref} ${forward} ${reverse} | \
         samtools sort -o ${sampleName}.sorted.bam
         """
 }
@@ -126,8 +124,6 @@ process callVariants {
 
     tag { sampleName }
     
-    errorStrategy { task.exitStatus in [143, 255] ? 'retry' : 'ignore' }
-
     publishDir "${params.outdir}/${task.process.replaceAll(":","_")}", pattern: "${sampleName}.variants.tsv", mode: 'copy'
 
     input:
@@ -157,7 +153,7 @@ process makeConsensus {
 
     script:
         """
-        samtools mpileup -A -d ${params.mpileupDepth} -Q0 ${bam} | \
+        samtools mpileup -aa -A -B -d ${params.mpileupDepth} -Q0 ${bam} | \
         ivar consensus -t ${params.ivarFreqThreshold} -m ${params.ivarMinDepth} \
         -n N -p ${sampleName}.primertrimmed.consensus
         """
