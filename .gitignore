@@ -10,4 +10,8 @@ trace*
 .vscode/
 .ipynb_checkpoints/
 misc
+<<<<<<< HEAD
 others
+=======
+output
+>>>>>>> qib-typing-variant
