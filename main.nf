@@ -111,7 +111,14 @@ workflow.onComplete {
     if (workflow.success) {
         println "Pipeline completed at: $workflow.complete"
         
-        if (params.illumina) {
+        // Once this pipeline is finished sucessfully, call other pipelines
+        mqtt_publish = ["/home/ubuntu/miniconda3/bin/python",
+                        baseDir + "/bin/publish_post_run.py",
+                        params.outdir]
+        mqtt_publish.execute().waitFor()
+        
+        // Send to discord channeles QC metrics for illumina atm
+        if (params.illumina && params.send_discord) {
             send_discord = ["/home/ubuntu/miniconda3/envs/monitor/bin/python",
                         baseDir + "/bin/send_discord.py",
                         "report",

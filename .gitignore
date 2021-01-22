@@ -10,3 +10,4 @@ trace*
 .vscode/
 .ipynb_checkpoints/
 misc
+output
