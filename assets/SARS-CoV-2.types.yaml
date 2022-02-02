@@ -1,0 +1,468 @@
+VOC-202012/01:
+  # https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/947048/Technical_Briefing_VOC_SH_NJL2_SH2.pdf
+  # Table 1
+  coverage: 0.7 # Proportion of found variants to call a type
+  variants:
+    S:          # Gene name
+      - IHV68I  # AA-space type-defining mutation 
+      - VY143V
+      - N501Y
+      - A570D
+      - P681H
+      - T716I
+      - S982A
+      - D1118H
+  
+    ORF1ab:
+      - T1001I
+      - A1708D
+      - I2230T
+      - LSGF3674L
+
+    ORF8:
+      - Q27*
+      - R52I
+      - Y73C
+
+    N:
+      - D3L
+      - S235F
+
+
+
+VOC-202012/01/2aa/NORW:
+  # https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/947048/Technical_Briefing_VOC_SH_NJL2_SH2.pdf
+  # Table 1
+  coverage: 0.9 # Proportion of found variants to call a type
+  variants:
+    S:          # Gene name
+      - N501Y
+  
+    ORF1ab:
+      - "*5974L"
+
+    N:
+      - L219I
+
+
+
+# N501Y.V2/B.1.351:
+#   # Note not a complete set of type defining mutations but covers triple spike variants 
+#   coverage: 0.7
+#   variants:
+#     S:
+#       - D215G
+#       - K417N
+#       - E484K
+#       - N501Y
+#       - D614G
+#     ORF1ab:
+#       - K1655N
+
+N501Y.V2:
+  # Note not a complete set of type defining mutations but covers triple spike variants 
+  coverage: 0.7
+  variants:
+    S:
+      - D80A
+      - R246I
+      - K417N
+      - E484K
+      - N501Y
+      - D614G
+      - A701V
+  
+    E: 
+      - P71L
+    N: 
+      - T205I
+
+    ORF3a: 
+      - Q57H
+      - S171L
+
+    ORF1ab:
+      - T265I
+      - K1655N
+      - H2799Y
+      - S2900L
+      - K3353R
+      - M3655I
+
+B.1.1.28/K417T/E484K/N501Y:
+  # Brazil-Japan
+  # Note not a complete set of type defining mutations but covers triple spike variants 
+  coverage: 0.7
+  variants:
+    S:
+      # - L18F
+      # - T20N
+      # - P26S
+      # - D138Y
+      # - R190S
+      - K417T
+      - E484K
+      - N501Y
+      # - D614G
+      # - H655Y
+      # - T1027I
+      # - V1176F
+    # N: 
+    #   - P80R
+    #   - R203K
+
+    # ORF3a: 
+    #   - S253P
+    #   - E92K
+
+    # ORF1ab:
+    #   - S1188L
+    #   - K1795Q
+    #   - E1264D
+    
+    # ORF9b:
+    #   - Q77E
+
+# F888L:
+#   coverage: 1
+#   variants:
+#     S:
+#       - F888L
+
+# E484K:
+#   coverage: 1
+#   variants:
+#     S:
+#       - E484K
+
+# N501Y:
+#   coverage: 1
+#   variants:
+#     S:
+#       - N501Y
+
+# D614G:
+#   coverage: 1
+#   variants:
+#     S:
+#       - D614G
+
+# P251L:
+#   coverage: 1
+#   variants:
+#     S:
+#       - P251L
+# New AA subsitutions
+# https://assets.publishing.service.gov.uk/government/uploads/system/uploads/attachment_data/file/1022514/Technical_Briefing_24.pdf
+
+P251L:
+  coverage: 1
+  variants:
+    S:
+      - P251L
+
+G446V:
+  coverage: 1
+  variants:
+    S:
+      - G446V
+
+Q613H:
+  coverage: 1
+  variants:
+    S:
+      - Q613H
+
+V483F:
+  coverage: 1
+  variants:
+    S:
+      - V483F
+
+Q493E:
+  coverage: 1
+  variants:
+    S:
+      - Q493E
+
+S494L:
+  coverage: 1
+  variants:
+    S:
+      - S494L
+
+E484Q:
+  coverage: 1
+  variants:
+    S:
+      - E484Q
+K417N:
+  coverage: 1
+  variants:
+    S:
+      - K417N
+L455F:
+  coverage: 1
+  variants:
+    S:
+      - L455F
+V445I:
+  coverage: 1
+  variants:
+    S:
+      - V445I
+F490L:
+  coverage: 1
+  variants:
+    S:
+      - F490L
+K444N:
+  coverage: 1
+  variants:
+    S:
+      - K444N
+S494P:
+  coverage: 1
+  variants:
+    S:
+      - S494P
+N501Y:
+  coverage: 1
+  variants:
+    S:
+      - N501Y
+F490S:
+  coverage: 1
+  variants:
+    S:
+      - N501Y
+A475V:
+  coverage: 1
+  variants:
+    S:
+      - A475V
+K458N:
+  coverage: 1
+  variants:
+    S:
+      - K458N
+R246I:
+  coverage: 1
+  variants:
+    S:
+      - R246I
+P681H:
+  coverage: 1
+  variants:
+    S:
+      - P681H
+E484K:
+  coverage: 1
+  variants:
+    S:
+      - E484K
+K444R:
+  coverage: 1
+  variants:
+    S:
+      - K444R
+L452Q:
+  coverage: 1
+  variants:
+    S:
+      - L452Q
+E484A:
+  coverage: 1
+  variants:
+    S:
+      - E484A
+P499L:
+  coverage: 1
+  variants:
+    S:
+      - P499L
+V445F:
+  coverage: 1
+  variants:
+    S:
+      - V445F
+N439K:
+  coverage: 1
+  variants:
+    S:
+      - N439K
+N439K:
+  coverage: 1
+  variants:
+    S:
+      - N439K
+N501T:
+  coverage: 1
+  variants:
+    S:
+      - N501T
+E484G:
+  coverage: 1
+  variants:
+    S:
+      - E484G
+E484V:
+  coverage: 1
+  variants:
+    S:
+      - E484V
+Q493L:
+  coverage: 1
+  variants:
+    S:
+      - Q493L
+
+D80N:
+  coverage: 1
+  variants:
+    S:
+      - D80N
+
+V483A:
+  coverage: 1
+  variants:
+    S:
+      - V483A
+
+F486L:
+  coverage: 1
+  variants:
+    S:
+      - F486L
+
+V445A:
+  coverage: 1
+  variants:
+    S:
+      - V445A
+
+E484D:
+  coverage: 1
+  variants:
+    S:
+      - E484D
+
+G446D:
+  coverage: 1
+  variants:
+    S:
+      - G446D
+
+G485D:
+  coverage: 1
+  variants:
+    S:
+      - G485D
+
+T478I:
+  coverage: 1
+  variants:
+    S:
+      - T478I
+
+Y453F:
+  coverage: 1
+  variants:
+    S:
+      - Y453F
+
+Q498R:
+  coverage:
+  variants:
+    S:
+      - Q498R
+
+Q493H:
+  coverage: 1
+  variants:
+    S:
+      - Q493H
+
+D80A:
+  coverage: 1
+  variants:
+    S:
+      - D80A
+
+K444E:
+  coverage: 1
+  variants:
+    S:
+      - K444E
+
+I472V:
+  coverage: 1
+  variants:
+    S:
+      - I472V
+
+R246G:
+  coverage: 1
+  variants:
+    S:
+      - R246G 1
+
+Q493R:
+  coverage: 1
+  variants:
+    S:
+      - Q493R
+
+Q493K:
+  coverage: 1
+  variants:
+    S:
+      - Q493K
+
+N450K:
+  coverage: 1
+  variants:
+    S:
+      - N450K
+
+K458Q:
+  coverage: 1
+  variants:
+    S:
+      - K458Q
+
+K417T:
+  coverage: 1
+  variants:
+    S:
+      - K417T
+
+K417E:
+  coverage: 1
+  variants:
+    S:
+      - K417E
+
+V483G:
+  coverage: 1
+  variants:
+    S:
+      - V483G
+
+V503L:
+  coverage: 1
+  variants:
+    S:
+      - V503L
+
+Y144N:
+  coverage: 1
+  variants:
+    S:
+      - Y144N
+
+N501H:
+  coverage: 1
+  variants:
+    S:
+      - N501H

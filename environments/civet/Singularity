@@ -1,0 +1,18 @@
+Bootstrap: docker
+From: continuumio/miniconda3:latest
+
+%labels
+authors="Thanh Le Viet" 
+description="Singularity image containing all requirements for Civet"
+
+%post
+apt-get update && apt-get install -y git make procps rsync && apt-get clean -y
+git clone https://github.com/COG-UK/civet /opt/civet
+cd /opt/civet
+/opt/conda/bin/conda env create -f environment.yml
+export PATH=/opt/conda/envs/civet/bin:$PATH
+pip install -U setuptools
+pip install --no-cache-dir .
+
+%environment
+export PATH=/opt/conda/envs/civet/bin:$PATH

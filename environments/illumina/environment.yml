@@ -1,0 +1,22 @@
+name: artic-ncov2019-illumina
+channels:
+  - conda-forge
+  - bioconda
+  - defaults
+dependencies:
+  - python=3
+  - matplotlib-base
+  - biopython=1.74
+  # - pandas=0.23.0=py36_1
+  - pandas=1.3.4
+  - bwa=0.7.17=pl5.22.0_2
+  - samtools=1.10
+  - trim-galore=0.6.5
+  - ivar=1.3.0
+  - pysam
+  - freebayes=1.3.2
+  - pip
+  - pip:
+     - click
+     - cigar
+     - loguru
