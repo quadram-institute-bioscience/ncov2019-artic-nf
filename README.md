@@ -21,6 +21,7 @@ nextflow run /path/to/ncov2019-artic-nf/folder \
 --directory "/path/to/illumina/fastq/folder" \
 --illumina \
 --readTrimming \
+--schemeVersion V4 \ # switch between V3/V4
 --get_all \ #Put all samples (failed and passed qc) into qc_climb_upload folder
 --prefix "test-v3" \
 --outdir "/path/to/output/folder" \
