@@ -179,7 +179,7 @@ process callConsensusFreebayes {
     publishDir "${params.outdir}/${task.process.replaceAll(":","_")}_variant", pattern: "${sampleName}.variants.norm.vcf", mode: 'copy'
     
     cpus 8
-    memory '32.GB'
+    memory '16.GB'
 
     input:
     tuple val(sampleName), path(bam), path(ref)
