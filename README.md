@@ -10,7 +10,7 @@ PLEASE ENSURE THAT YOU READ BOTH THE README AND THE CONFIG FILE AND UNDERSTAND T
 For using the pipeline with QIB setting, i.e. primers V3 and cluster configuration, please use **qib** branch
 
 ```bash
-git checkout qib
+git checkout qib-2022
 ```
 Command line to execute the pipeline for a run
 
