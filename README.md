@@ -7,7 +7,7 @@ PLEASE ENSURE THAT YOU READ BOTH THE README AND THE CONFIG FILE AND UNDERSTAND T
 
 #### QIB settings
 
-For using the pipeline with QIB setting, i.e. primers V3 and cluster configuration, please use **qib** branch
+For using the pipeline with QIB setting, i.e. primers V3 and cluster configuration, please use **qib-2022** branch
 
 ```bash
 git checkout qib-2022
