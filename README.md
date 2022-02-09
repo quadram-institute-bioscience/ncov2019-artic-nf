@@ -25,8 +25,8 @@ nextflow run /path/to/ncov2019-artic-nf/folder \
 --get_all \ #Put all samples (failed and passed qc) into qc_climb_upload folder
 --prefix "test-v3" \
 --outdir "/path/to/output/folder" \
---bed "/beegfs/software/ncov2019-artic-nf/primers/scheme/primer_schemes/nCoV-2019/V3/nCoV-2019.bed" \
---ref "/beegfs/software/ncov2019-artic-nf/primers/scheme/primer_schemes/nCoV-2019/V3/nCoV-2019.reference.fasta" \
+--bed "/beegfs/software/ncov2019-artic-nf/primers/scheme/primer_schemes/nCoV-2019/V4/nCoV-2019.bed" \
+--ref "/beegfs/software/ncov2019-artic-nf/primers/scheme/primer_schemes/nCoV-2019/V4/nCoV-2019.reference.fasta" \
 --fourLanes \ #Use when 4-lane fastqs were not merged
 -profile qib,singularity \
 -with-trace trace-4lanes.txt \
